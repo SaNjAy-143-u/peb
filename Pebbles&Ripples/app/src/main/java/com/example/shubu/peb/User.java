@@ -1,10 +1,12 @@
 package com.example.shubu.peb;
 
+import java.io.Serializable;
+
 /**
  * Created by shubu on 6/22/2017.
  */
 
-public class User {
+public class User implements Serializable {
     String name, username, password;
     int age;
 

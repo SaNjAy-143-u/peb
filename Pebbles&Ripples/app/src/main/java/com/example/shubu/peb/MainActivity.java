@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void displayUserDetails(){
         User user = userLocalStore.getLoggedInUser();
-
+        startActivity(new Intent(this,Admin.class));
         etUsername.setText(user.username);
         etname.setText(user.name);
         etAge.setText(user.age + "");

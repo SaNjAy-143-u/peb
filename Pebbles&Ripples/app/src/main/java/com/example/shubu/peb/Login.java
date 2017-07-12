@@ -70,6 +70,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 }
 
             }
+
+            @Override
+            public void done(String returnedUser) {
+
+            }
         });
     }
     private void showErrorMessage(){
@@ -83,6 +88,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         userLocalStore.storeUserData(returnedUser);
         userLocalStore.setUserLoggedIn(true);
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, Admin.class));
     }
 }

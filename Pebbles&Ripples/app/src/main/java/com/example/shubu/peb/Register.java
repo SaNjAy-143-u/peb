@@ -49,6 +49,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             public void done(User returnedUser) {
                 startActivity(new Intent(Register.this, Login.class));
             }
+
+            @Override
+            public void done(String returnedUser) {
+
+            }
         });
     }
 

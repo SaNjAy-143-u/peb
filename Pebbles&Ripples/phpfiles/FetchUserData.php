@@ -2,8 +2,8 @@
 
 	$con = mysqli_connect("localhost","root","","pebbles");
 
-	$password = "saas";
-	$username = "sas";
+	$password = $_POST["password"];
+	$username = $_POST["username"];
 	$sql_query="select  *  from user where username like'$username' and password like '$password';";
 	$result=mysqli_query($con,$sql_query);
 	$response=array();

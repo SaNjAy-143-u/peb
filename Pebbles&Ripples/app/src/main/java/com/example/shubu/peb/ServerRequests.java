@@ -28,11 +28,13 @@ import java.util.ArrayList;
 public class ServerRequests {
 
     static ProgressDialog progressDialog;
+    static Context context;
     public static final int CONNECTION_TIMEOUT = 1000 * 15;
     public static final String SERVER_ADDRESS = "http://10.0.2.2/pebbles/";
 
     public ServerRequests(Context context) {
         progressDialog = new ProgressDialog(context);
+        this.context=context;
         progressDialog.setCancelable(false);
         progressDialog.setTitle("Processing");
         progressDialog.setMessage("Please wait..");
@@ -46,6 +48,14 @@ public class ServerRequests {
     public static void fetchUserDataInBackground(User user, GetUserCallback callback) {
         progressDialog.show();
         new fetchUserDataAsyncTask(user, callback).execute();
+    }
+    public static void fetchAllUserInBackground(GetUserCallback userCallback){
+        progressDialog.show();
+        new FetchAllUserAsyncTask(userCallback).execute();
+    }
+    public static void deleteUser(User user, GetUserCallback userCallback){
+        progressDialog.show();
+        new deleteUserAsyncTask(user,userCallback).execute();
     }
 
     public static class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -89,7 +99,8 @@ public class ServerRequests {
         @Override
         protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
-            userCallback.done(null);
+            User user=null;
+            userCallback.done(user);
 
             super.onPostExecute(aVoid);
         }
@@ -100,7 +111,7 @@ public class ServerRequests {
         User user;
         GetUserCallback userCallback;
 
-        public fetchUserDataAsyncTask(User user, GetUserCallback userCallback) {
+        public  fetchUserDataAsyncTask(User user, GetUserCallback userCallback) {
             this.user = user;
             this.userCallback = userCallback;
         }
@@ -153,6 +164,105 @@ public class ServerRequests {
             userCallback.done(returnedUser);
 
             super.onPostExecute(returnedUser);
+        }
+    }
+    public static class deleteUserAsyncTask extends AsyncTask<Void, Void, Void> {
+        User user;
+        GetUserCallback userCallback;
+
+        public  deleteUserAsyncTask(User user, GetUserCallback userCallback) {
+            this.user = user;
+            this.userCallback = userCallback;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("username", user.username));
+            dataToSend.add(new BasicNameValuePair("password", user.password));
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "user_delete.php");
+            User returnedUser = null;
+            try {
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                userCallback.done(result);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void returnedUser) {
+            progressDialog.dismiss();
+
+            super.onPostExecute(returnedUser);
+        }
+    }
+    public static class FetchAllUserAsyncTask extends AsyncTask<Void,Void,Void> {
+        GetUserCallback userCallback;
+        public  FetchAllUserAsyncTask(GetUserCallback userCallback) {
+            this.userCallback=userCallback;
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            User returneduser = null;
+            int count=0;
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "get_all_names.php");
+            try {
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                /*JSONObject jObject = new JSONObject(result);
+                JSONArray jsonArray = jObject.getJSONArray("user");
+                User[] userList=new User[jsonArray.length()];
+                if (jsonArray.length() == 0) {
+                    returneduser = null;
+
+                } else {
+                    while(count<jsonArray.length()) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(count);
+                        String name = jsonObject.getString("name");
+                        String age = jsonObject.getString("age");
+                        String username = jsonObject.getString("username");
+                        String password = jsonObject.getString("password");
+                        int intage = Integer.parseInt(age);
+                        returneduser = new User(name, intage, username, password);
+                        userList[count]=returneduser;
+                        count++;
+                    }
+                }*/userCallback.done(result);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+            super.onPostExecute(aVoid);
         }
     }
 }

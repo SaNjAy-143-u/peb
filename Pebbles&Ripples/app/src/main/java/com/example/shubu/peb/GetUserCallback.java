@@ -7,4 +7,5 @@ package com.example.shubu.peb;
 interface GetUserCallback {
 
     public abstract void done(User returnedUser);
+    public abstract void done(String returnedUser);
 }
