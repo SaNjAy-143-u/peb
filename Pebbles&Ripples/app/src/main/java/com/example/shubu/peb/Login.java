@@ -1,4 +1,5 @@
 package com.example.shubu.peb;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
     Button bLogin;
-    EditText etUsername,etPassword;
+    EditText etUsername, etPassword;
     TextView tvRegisterLink;
 
     UserLocalStore userLocalStore;
@@ -37,15 +38,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.bLogin:
                 String username = etUsername.getText().toString();
-                String password  = etPassword.getText().toString();
+                String password = etPassword.getText().toString();
 
                 User user = new User(username, password);
                 authenticate(user);
-
-
 
 
                 break;
@@ -57,9 +56,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
 
     }
-    private void authenticate(User user){
+
+    private void authenticate(final User user) {
         ServerRequests serverRequests = new ServerRequests(this);
-        ServerRequests.fetchUserDataInBackground(user, new GetUserCallback(){
+        serverRequests.fetchUserDataInBackground(user, new GetUserCallback(){
             public void done(User returnedUser){
                 if (returnedUser == null)
                 {
@@ -76,15 +76,33 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
+        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("user");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dp : dataSnapshot.getChildren()) {
+                    User returnuser = dp.getValue(User.class);
+                    if (returnuser.username.equals(user.username) && returnuser.password.equals(user.password)) {
+                        logUserIn(returnuser);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
     }
-    private void showErrorMessage(){
+    private void showErrorMessage() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Login.this);
         dialogBuilder.setMessage("Incorrect user details");
-        dialogBuilder.setPositiveButton("OK",null);
+        dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
     }
 
-    private void logUserIn(User returnedUser){
+    private void logUserIn(User returnedUser) {
         userLocalStore.storeUserData(returnedUser);
         userLocalStore.setUserLoggedIn(true);
 

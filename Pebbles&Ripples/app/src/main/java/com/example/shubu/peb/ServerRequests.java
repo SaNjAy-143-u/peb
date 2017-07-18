@@ -3,6 +3,13 @@ package com.example.shubu.peb;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,8 +23,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -71,28 +76,10 @@ public class ServerRequests {
         @Override
         protected Void doInBackground(Void... params) {
 
-            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("name", user.name));
-            dataToSend.add(new BasicNameValuePair("age", user.age + ""));
-            dataToSend.add(new BasicNameValuePair("username", user.username));
-            dataToSend.add(new BasicNameValuePair("password", user.password));
-
-            HttpParams httpRequestParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
-            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
-
-            HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS + "Register.php");
-
-            try {
-                post.setEntity(new UrlEncodedFormEntity(dataToSend));
-                client.execute(post);
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-
-
+             DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("user");
+            String id=databaseReference.push().getKey();
+            user.id=id;
+            databaseReference.child(id).setValue(user);
             return null;
         }
 
@@ -110,6 +97,7 @@ public class ServerRequests {
     public static class fetchUserDataAsyncTask extends AsyncTask<Void, Void, User> {
         User user;
         GetUserCallback userCallback;
+        static User returnuser;
 
         public  fetchUserDataAsyncTask(User user, GetUserCallback userCallback) {
             this.user = user;
@@ -118,7 +106,25 @@ public class ServerRequests {
 
         @Override
         protected User doInBackground(Void... params) {
-            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            DatabaseReference databaseReference =FirebaseDatabase.getInstance().getReference().child("user");
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dp:dataSnapshot.getChildren()){
+                        returnuser =dp.getValue(User.class);
+                        if (returnuser.username.equals(user.username)&& returnuser.password.equals(user.password)) {
+                            Toast.makeText(context, returnuser.username,Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            /*ArrayList<NameValuePair> dataToSend = new ArrayList<>();
             dataToSend.add(new BasicNameValuePair("username", user.username));
             dataToSend.add(new BasicNameValuePair("password", user.password));
 
@@ -152,9 +158,9 @@ public class ServerRequests {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            */
 
-
-            return returnedUser;
+            return returnuser;
 
         }
 

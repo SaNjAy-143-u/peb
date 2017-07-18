@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Admin extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -83,40 +85,22 @@ public class Admin extends AppCompatActivity
 
         if (id == R.id.all_users) {
             //opens all users in listview. tap a user to update or delete
-            ServerRequests serverRequests=new ServerRequests(this);
-            userAdapter.list.clear();
-            userAdapter.notifyDataSetChanged();
-            serverRequests.fetchAllUserInBackground(new GetUserCallback() {
+            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("user");
+            databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void done(User returnedUser) {
-
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds:dataSnapshot.getChildren()){
+                        User user=ds.getValue(User.class);
+                        userAdapter.add(user);
+                    }
                 }
 
                 @Override
-                public void done(String returnedUser) {
-                    JSONObject jObject = null;
-                    User user;
-                    try {
-                        jObject = new JSONObject(returnedUser);
-                        JSONArray jsonArray = jObject.getJSONArray("user");
-                        int count=0;
-                        while(count<jsonArray.length()) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(count);
-                            String name = jsonObject.getString("name");
-                            String age = jsonObject.getString("age");
-                            String username = jsonObject.getString("username");
-                            String password = jsonObject.getString("password");
-                            int intage = Integer.parseInt(age);
-                            user = new User(name, intage, username, password);
-                            userAdapter.add(user);
-                            count++;
-                        }userAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
             });
+            userAdapter.notifyDataSetChanged();
             listView.setAdapter(userAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
