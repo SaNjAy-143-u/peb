@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Name:-"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/name"
+        />
+
+    <TextView
+        android:id="@+id/phone_no"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/address"
+        />
+
+    <TextView
+        android:id="@+id/car_no"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="Car no."
+        android:layout_below="@id/phone_no"/>
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="2dp"
+        android:layout_centerHorizontal="true"
+        android:background="#000000"
+        android:id="@+id/seperator"
+        android:layout_below="@+id/car_no"
+        />
+    <TextView
+        android:id="@+id/outtime"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="Out time"
+        android:inputType="time"
+        android:layout_below="@id/seperator"/>
+
+    <TextView
+        android:id="@+id/intime"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="In time"
+        android:inputType="time"
+        android:layout_below="@+id/outtime"/>
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:inputType="time"
+        android:layout_centerHorizontal="true"
+        android:text="Duration"
+        android:layout_below="@+id/intime"/>
+</RelativeLayout>

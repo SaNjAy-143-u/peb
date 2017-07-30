@@ -34,7 +34,15 @@
             android:name=".Admin"
             android:label="@string/title_activity_admin"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EditUser"></activity>
+        <activity android:name=".EditUser" />
+        <activity
+            android:name=".Guard"
+            android:label="@string/title_activity_guard"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Resident"
+            android:label="@string/title_activity_resident"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
