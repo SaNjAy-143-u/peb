@@ -42,7 +42,8 @@
         <activity
             android:name=".Resident"
             android:label="@string/title_activity_resident"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".VisitorFragment"></activity>
     </application>
 
 </manifest>

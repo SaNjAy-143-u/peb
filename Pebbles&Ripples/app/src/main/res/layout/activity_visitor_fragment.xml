@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Name:-"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Visit to"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/name"
+        />
+
+    <EditText
+        android:id="@+id/phone_no"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Phone"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/address"
+        />
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Source"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/phone_no"
+        android:id="@+id/source"
+        />
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Purpose"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/source"
+        android:id="@+id/purpose"
+        />
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Guard:"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/purpose"
+        android:id="@+id/guard"
+        />
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="2dp"
+        android:layout_centerHorizontal="true"
+        android:background="#000000"
+        android:id="@+id/seperator"
+        android:layout_below="@+id/guard"
+        />
+    <TextView
+        android:id="@+id/outtime"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="Out time"
+        android:inputType="time"
+        android:layout_below="@id/seperator"/>
+
+    <TextView
+        android:id="@+id/intime"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="In time"
+        android:inputType="time"
+        android:layout_below="@+id/outtime"/>
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:inputType="time"
+        android:layout_centerHorizontal="true"
+        android:text="Duration"
+        android:layout_below="@+id/intime"/>
+    </RelativeLayout>

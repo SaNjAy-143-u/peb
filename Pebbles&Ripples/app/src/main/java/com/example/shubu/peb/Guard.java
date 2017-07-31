@@ -23,6 +23,7 @@ public class Guard extends AppCompatActivity {
     String current_time;
     String current_date;
     Calendar c;
+    Boolean USER=false,VISITOR=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +45,16 @@ public class Guard extends AppCompatActivity {
     }
 
     public void search_vehicle(View view){
-        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("user");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("user").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds:dataSnapshot.getChildren()){
                     User user=ds.getValue(User.class);
                     if (user.car_no.equals(carno)){
-                        ResidentFragment residentFragment=new ResidentFragment();
-                        residentFragment.setData(user.name,user.address,user.phone_no,user.car_no,inTime,outTime,duration);
+                        USER=true;
+                         residentSetData(user);
                     }
                 }
             }
@@ -62,6 +64,36 @@ public class Guard extends AppCompatActivity {
 
             }
         });
-    }
+        if (!USER) {
+            databaseReference.child("visitor").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Visitor visitor = ds.getValue(Visitor.class);
+                        if (visitor.car_no.equals(carno)) {
+                            VISITOR = true;
+                            visitorSetData(visitor);
+                        }
+                    }
 
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        if(!VISITOR&&!USER){
+            Visitor visitor=new Visitor();
+            visitorSetData(visitor);
+        }
+    }
+    public void residentSetData(User user){
+        ResidentFragment residentFragment=new ResidentFragment();
+        residentFragment.setData(user.name,user.address,user.phone_no,user.car_no,inTime,outTime,duration);
+    }
+    public void visitorSetData(Visitor visitor){
+
+    }
 }
